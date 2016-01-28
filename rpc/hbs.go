@@ -5,10 +5,17 @@ import (
 	"github.com/open-falcon/common/model"
 	"github.com/open-falcon/common/utils"
 	"github.com/open-falcon/hbs/cache"
+	"github.com/open-falcon/hbs/g"
+    "log"
 )
 
 func (t *Hbs) GetExpressions(req model.NullRpcRequest, reply *model.ExpressionResponse) error {
 	reply.Expressions = cache.ExpressionCache.Get()
+
+    debug := g.Config().Debug
+    if debug {
+        log.Printf("[DEBUG] GetExpressions args is %v, reply is %v",req,reply)
+    }
 	return nil
 }
 
@@ -16,6 +23,7 @@ func (t *Hbs) GetStrategies(req model.NullRpcRequest, reply *model.StrategiesRes
 	reply.HostStrategies = []*model.HostStrategy{}
 	// 一个机器ID对应多个模板ID
 	hidTids := cache.HostTemplateIds.GetMap()
+
 	sz := len(hidTids)
 	if sz == 0 {
 		return nil
@@ -66,6 +74,11 @@ func (t *Hbs) GetStrategies(req model.NullRpcRequest, reply *model.StrategiesRes
 	}
 
 	reply.HostStrategies = hostStrategies
+
+    debug := g.Config().Debug
+    if debug {
+        log.Printf("[DEBUG] GetStrategies args is %v, reply is %v",req,reply)
+    }
 	return nil
 }
 

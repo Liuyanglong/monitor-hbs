@@ -4,6 +4,7 @@
     "hosts": "",
     "maxIdle": 100,
     "listen": ":6030",
+    "external_nodes":"/home/work/workspace/src/github.com/open-falcon/portal/enc.sh",
     "trustable": [""],
     "http": {
         "enabled": true,

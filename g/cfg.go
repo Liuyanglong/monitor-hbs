@@ -18,6 +18,7 @@ type GlobalConfig struct {
 	Database  string      `json:"database"`
 	MaxIdle   int         `json:"maxIdle"`
 	Listen    string      `json:"listen"`
+    ExternalNodes   string  `json:"external_nodes"`
 	Trustable []string    `json:"trustable"`
 	Http      *HttpConfig `json:"http"`
 }
@@ -55,6 +56,10 @@ func ParseConfig(cfg string) {
 	if err != nil {
 		log.Fatalln("parse config file:", cfg, "fail:", err)
 	}
+    if !file.IsExist( c.ExternalNodes ) {
+        log.Printf("WARN: the external_nodes file [%s] is not exist!", c.ExternalNodes)
+        c.ExternalNodes = ""
+    }
 
 	configLock.Lock()
 	defer configLock.Unlock()

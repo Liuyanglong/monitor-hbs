@@ -7,7 +7,9 @@ package cache
 import (
 	"github.com/open-falcon/common/model"
 	"github.com/open-falcon/hbs/db"
+    "github.com/open-falcon/hbs/g"
 	"sync"
+    "log"
 	"time"
 )
 
@@ -27,18 +29,29 @@ func (this *SafeAgents) Put(req *model.AgentReportRequest) {
 		LastUpdate:    time.Now().Unix(),
 		ReportRequest: req,
 	}
-
-	db.UpdateAgent(val)
+    
+    if g.Config().ExternalNodes == "" {
+        db.UpdateAgent(val)
+    }
 
 	this.Lock()
 	defer this.Unlock()
 	this.M[req.Hostname] = val
+    
+    debug := g.Config().Debug
+    if debug {
+        log.Printf("[DEBUG][CACHE] agent.put : %v", this.M)
+    }
 }
 
 func (this *SafeAgents) Get(hostname string) (*model.AgentUpdateInfo, bool) {
 	this.RLock()
 	defer this.RUnlock()
 	val, exists := this.M[hostname]
+    debug := g.Config().Debug
+    if debug {
+        log.Printf("[DEBUG][CACHE] agent.get : hostname:%v, val is %v, exists is %v", hostname,val,exists)
+    }
 	return val, exists
 }
 
@@ -46,6 +59,11 @@ func (this *SafeAgents) Delete(hostname string) {
 	this.Lock()
 	defer this.Unlock()
 	delete(this.M, hostname)
+
+    debug := g.Config().Debug
+    if debug {
+        log.Printf("[DEBUG][CACHE] agent.delete : %v", this.M)
+    }
 }
 
 func (this *SafeAgents) Keys() []string {
@@ -58,6 +76,11 @@ func (this *SafeAgents) Keys() []string {
 		keys[i] = hostname
 		i++
 	}
+
+    debug := g.Config().Debug
+    if debug {
+        log.Printf("[DEBUG][CACHE] agent.keys : %v", keys)
+    }
 	return keys
 }
 

@@ -3,7 +3,10 @@ package cache
 import (
 	"github.com/open-falcon/common/model"
 	"github.com/open-falcon/hbs/db"
+	"github.com/open-falcon/hbs/enc"
+	"github.com/open-falcon/hbs/g"
 	"sync"
+    "log"
 )
 
 // 一个HostGroup对应多个Template
@@ -70,12 +73,28 @@ func (this *SafeHostTemplateIds) GetMap() map[int][]int {
 }
 
 func (this *SafeHostTemplateIds) Init() {
-	m, err := db.QueryHostTemplateIds()
-	if err != nil {
-		return
+	var hostTempMap map[int][]int
+
+	if g.Config().ExternalNodes == "" {
+		m, err := db.QueryHostTemplateIds()
+		if err != nil {
+			return
+		}
+		hostTempMap = m
+	} else {
+		m, err := enc.QueryHostTemplateIds()
+		if err != nil {
+			return
+		}
+		hostTempMap = m
 	}
 
 	this.Lock()
 	defer this.Unlock()
-	this.M = m
+	this.M = hostTempMap
+
+	debug := g.Config().Debug
+	if debug {
+		log.Printf("[DEBUG][CACHE] SafeHostTemplateIds.init : %v", this.M)
+	}
 }

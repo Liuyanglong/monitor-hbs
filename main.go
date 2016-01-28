@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/open-falcon/hbs/cache"
 	"github.com/open-falcon/hbs/db"
+	"github.com/open-falcon/hbs/enc"
 	"github.com/open-falcon/hbs/g"
 	"github.com/open-falcon/hbs/http"
 	"github.com/open-falcon/hbs/rpc"
@@ -26,6 +27,7 @@ func main() {
 	g.ParseConfig(*cfg)
 
 	db.Init()
+	enc.Init()
 	cache.Init()
 
 	go cache.DeleteStaleAgents()

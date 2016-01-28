@@ -7,6 +7,7 @@ import (
 	"github.com/open-falcon/hbs/cache"
 	"github.com/open-falcon/hbs/g"
 	"sort"
+    "log"
 	"strings"
 	"time"
 )
@@ -19,6 +20,11 @@ func (t *Agent) MinePlugins(args model.AgentHeartbeatRequest, reply *model.Agent
 	reply.Plugins = cache.GetPlugins(args.Hostname)
 	reply.Timestamp = time.Now().Unix()
 
+    debug := g.Config().Debug
+    if debug {
+        log.Printf("[DEBUG] MinePlugins args is %v, reply is %v",args,reply)
+    }
+
 	return nil
 }
 
@@ -29,6 +35,11 @@ func (t *Agent) ReportStatus(args *model.AgentReportRequest, reply *model.Simple
 	}
 
 	cache.Agents.Put(args)
+
+    debug := g.Config().Debug
+    if debug {
+        log.Printf("[DEBUG] ReportStatus args is %v, reply is %v",args,reply)
+    }
 
 	return nil
 }
@@ -62,6 +73,11 @@ func (t *Agent) BuiltinMetrics(args *model.AgentHeartbeatRequest, reply *model.B
 	}
 	reply.Checksum = checksum
 	reply.Timestamp = time.Now().Unix()
+
+    debug := g.Config().Debug
+    if debug {
+        log.Printf("[DEBUG] TrustableIps args is %v, reply is %v",args,reply)
+    }
 
 	return nil
 }
