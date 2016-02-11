@@ -1,6 +1,13 @@
 falcon-hbs
 ==========
 
+forked from openfalcon-hbs
+和本人其他类monitor-* 项目类似，之所以不直接fork，是因为 有些考虑到需要进行二次开发的功能估计 无法合并到openfalcon，所以另开一个repo。
+这个repo计划做如下：
+
+  - 不在考虑对enc 脚本的开发，直接同 https://github.com/Liuyanglong/uic 进行交互
+
+==========
 Heartbeat Server. 所有Agent都会连到hbs，每分钟发一次心跳，汇报自己的hostname、ip、agent version、plugin version，hbs据此
 填充host表。agent还会通过hbs拿到应该监控的端口、进程，应该执行的插件等信息。
 
